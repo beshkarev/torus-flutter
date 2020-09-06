@@ -1,14 +1,54 @@
-# torus
+# Torus Direct 
+    A torus direct flutter plugin supports both android and ios.
+### Android Setup
 
-A new Flutter package project.
+Add following activity to your manifest file,
 
-## Getting Started
+```sh
+<activity android:name="org.torusresearch.torusdirect.activity.StartUpActivity"
+    android:launchMode="singleTop"
+    android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+    >
+    <intent-filter>
+        <action android:name="android.intent.action.VIEW"/>
+        <category android:name="android.intent.category.DEFAULT"/>
+        <category android:name="android.intent.category.BROWSABLE"/>
+        <data android:scheme="torusapp"
+            android:host="org.torusresearch.torusdirectandroid"
+            android:pathPattern="/*"
+            android:pathPrefix="/redirect"/>
+    </intent-filter>
+</activity>
+```
+### iOS Setup
 
-This project is a starting point for a Dart
-[package](https://flutter.dev/developing-packages/),
-a library module containing code that can be shared easily across
-multiple Flutter or Dart projects.
+Add below lines to your AppDelegate.swift file,
 
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.dev/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
+```sh
+override func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
+        if url.host == "your host" {
+            TorusSwiftDirectSDK.handle(url: url)
+        }
+        return true
+    }
+```
+
+### Usage
+
+
+```sh
+ var args = DirectSdkArgs(
+                  "torusapp://org.torusresearch.torusdirectandroid/redirect", //redirectUri
+                  TorusNetwork.TESTNET, //network
+                  "0x4023d2a0D330bF11426B12C6144Cfb96B7fa6183", //proxyContractAddress
+                  "torusapp://org.torusresearch.torusdirectandroid/redirect" //browserRedirectUri
+              );
+await Torus.triggerLogin(
+    args, // DirectSdkArgs
+    LoginProvider.google, // LoginProvider
+    "google", //Verifier
+    "221898609709-obfn3p63741l5333093430j3qeiinaa8.apps.googleusercontent.com" //client Id
+);
+```
+
+
